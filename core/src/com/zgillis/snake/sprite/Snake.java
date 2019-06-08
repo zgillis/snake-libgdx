@@ -4,22 +4,23 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.zgillis.snake.SnakeGame;
+import com.zgillis.snake.state.PlayState;
+
+import static com.zgillis.snake.state.PlayState.BLOCK_SIZE;
 
 public class Snake
 {
-    // Game is 32x24 blocks (WIDTH x HEIGHT).
-    public static final int BLOCK_SIZE = 25;
 
     private Direction direction;
     private Array<Vector2> positions;
 
-    public Snake(int x, int y)
+    public Snake()
     {
         /* Create a new snake at the designated location, add the first
          * position (head of snake) to positions array, and set the
          * initial snake position. */
         positions = new Array<Vector2>();
-        Vector2 startPosition = new Vector2(x, y);
+        Vector2 startPosition = new Vector2(PlayState.SNAKE_START_X * BLOCK_SIZE, PlayState.SNAKE_START_Y * BLOCK_SIZE);
         positions.add(startPosition);
         direction = Direction.RIGHT; //TODO: Randomize start direction
     }

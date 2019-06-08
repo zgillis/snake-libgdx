@@ -4,20 +4,31 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.zgillis.snake.SnakeGame;
+import com.zgillis.snake.sprite.Food;
 import com.zgillis.snake.sprite.Snake;
 
 public class PlayState extends State
 {
+    // Game is 32x24 blocks (WIDTH x HEIGHT).
+    public static final int BLOCK_SIZE = 25;
+    public static final int BLOCK_WIDTH = SnakeGame.WIDTH / BLOCK_SIZE;
+    public static final int BLOCK_HEIGHT = SnakeGame.HEIGHT / BLOCK_SIZE;
+    public static final int SNAKE_START_X = 15;
+    public static final int SNAKE_START_Y = 11;
+
     float moveRate = 0.25f;
     float timePassed = 0f;
     ShapeRenderer shapeRenderer;
     Snake snake;
+    Food food;
 
     public PlayState(GameStateManager gsm)
     {
         super(gsm);
         shapeRenderer = new ShapeRenderer();
-        snake = new Snake(15 * Snake.BLOCK_SIZE, 11 * Snake.BLOCK_SIZE);
+        snake = new Snake();
+        food = new Food();
     }
 
     @Override
@@ -52,6 +63,7 @@ public class PlayState extends State
     public void render(SpriteBatch sb)
     {
         snake.drawSnake(shapeRenderer);
+        food.drawFood(shapeRenderer);
     }
 
     @Override
