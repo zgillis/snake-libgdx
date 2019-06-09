@@ -54,6 +54,11 @@ public class PlayState extends State
         timePassed += deltaTime;
         handleInput();
         if (timePassed >= moveRate) {
+            if (snake.getHeadPos().epsilonEquals(food.getPosition())) {
+                snake.setNextLinkPos(food.getPosition());
+                moveRate *= 0.9f;
+                food = new Food();
+            }
             snake.moveSnake();
             timePassed = 0;
         }
@@ -62,8 +67,8 @@ public class PlayState extends State
     @Override
     public void render(SpriteBatch sb)
     {
-        snake.drawSnake(shapeRenderer);
         food.drawFood(shapeRenderer);
+        snake.drawSnake(shapeRenderer);
     }
 
     @Override

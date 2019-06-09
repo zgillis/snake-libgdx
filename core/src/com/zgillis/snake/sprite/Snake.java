@@ -13,6 +13,7 @@ public class Snake
 
     private Direction direction;
     private Array<Vector2> positions;
+    private Vector2 nextLinkPos;
 
     public Snake()
     {
@@ -40,52 +41,69 @@ public class Snake
     public void moveSnake()
     {
         // Gets the position of the head of the snake, then moves it.
-        Vector2 lastPos = positions.get(0);
-        positions.set(0, updateBlockPosition(lastPos));
+        Vector2 lastPos = positions.get(0).cpy();
+        positions.set(0, getNewHeadPosition(lastPos));
 
         /* For each snake segmment, copy the current location, move the
         *  segment to the previous position of the previous segment, then
         *  set save the previous position in 'lastPos' for the next iteration. */
         for (int i = 1; i < positions.size; i++) {
-            Vector2 currentPos = new Vector2(positions.get(i));
+            Vector2 currentPos = positions.get(i);
             positions.set(i, lastPos);
             lastPos = currentPos;
         }
+
+        if (nextLinkPos != null) {
+            positions.add(new Vector2(nextLinkPos));
+            nextLinkPos = null;
+        }
     }
 
-    public Vector2 updateBlockPosition(Vector2 position)
+    public Vector2 getNewHeadPosition(Vector2 position)
     {
         /* Checks the snake's movement direction and sets the next position
         *  of the snake. If the snake would move off-screen, returns the current
         *  snake position instead of moving it. */
+        float x = position.x;
+        float y = position.y;
+
         switch (direction) {
             case UP:
                 if (position.y >= SnakeGame.HEIGHT - BLOCK_SIZE)
                     return position;
-                position.add(0, BLOCK_SIZE);
+                y += BLOCK_SIZE;
                 break;
             case DOWN:
                 if (position.y < BLOCK_SIZE)
                     return position;
-                position.sub(0, BLOCK_SIZE);
+                y -= BLOCK_SIZE;
                 break;
             case LEFT:
                 if (position.x < BLOCK_SIZE)
                     return position;
-                position.sub(BLOCK_SIZE, 0);
+                x -= BLOCK_SIZE;
                 break;
             case RIGHT:
                 if (position.x >= SnakeGame.WIDTH - BLOCK_SIZE)
                     return position;
-                position.add(BLOCK_SIZE, 0);
+                x += BLOCK_SIZE;
                 break;
         }
-        return position;
+        return new Vector2(x, y);
     }
 
     public void setDirection(Direction direction)
     {
         this.direction = direction;
+    }
+
+    public void setNextLinkPos(Vector2 nextLinkPos) {
+        this.nextLinkPos = nextLinkPos;
+    }
+
+    public Vector2 getHeadPos()
+    {
+        return positions.get(0);
     }
 
     // An enumeration to define the directions a snake can move.
