@@ -2,7 +2,9 @@ package com.zgillis.snake.state;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.zgillis.snake.SnakeGame;
 import com.zgillis.snake.sprite.Food;
@@ -16,12 +18,16 @@ public class PlayState extends State
     public static final int BLOCK_HEIGHT = SnakeGame.HEIGHT / BLOCK_SIZE;
     public static final int SNAKE_START_X = 15;
     public static final int SNAKE_START_Y = 11;
+    public static final float SPEEDUP_RATE = 0.95f;
 
     float moveRate = 0.25f;
     float timePassed = 0f;
+    long score = 0;
     ShapeRenderer shapeRenderer;
     Snake snake;
     Food food;
+    BitmapFont font;
+    FreeTypeFontGenerator generator;
 
     public PlayState(GameStateManager gsm)
     {
@@ -29,6 +35,12 @@ public class PlayState extends State
         shapeRenderer = new ShapeRenderer();
         snake = new Snake();
         food = new Food();
+
+
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("Minecraft.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 20;
+        font = generator.generateFont(parameter); // font size 12 pixels
     }
 
     @Override
@@ -56,6 +68,7 @@ public class PlayState extends State
         if (timePassed >= moveRate) {
             if (snake.getHeadPos().epsilonEquals(food.getPosition())) {
                 snake.setNextLinkPos(food.getPosition());
+                score += 50f / moveRate;
                 moveRate *= 0.9f;
                 food = new Food();
             }
@@ -67,6 +80,9 @@ public class PlayState extends State
     @Override
     public void render(SpriteBatch sb)
     {
+        sb.begin();
+        font.draw(sb, "SCORE: " + score, 2.5f, 595);
+        sb.end();
         food.drawFood(shapeRenderer);
         snake.drawSnake(shapeRenderer);
     }
@@ -75,5 +91,6 @@ public class PlayState extends State
     public void dispose()
     {
         shapeRenderer.dispose();
+        generator.dispose(); // don't forget to dispose to avoid memory leaks!
     }
 }
