@@ -20,14 +20,14 @@ public class PlayState extends State
     public static final int SNAKE_START_Y = 11;
     public static final float SPEEDUP_RATE = 0.95f;
 
-    float moveRate = 0.25f;
-    float timePassed = 0f;
-    long score = 0;
-    ShapeRenderer shapeRenderer;
-    Snake snake;
-    Food food;
-    BitmapFont font;
-    FreeTypeFontGenerator generator;
+    private float moveRate = 0.25f;
+    private float timePassed = 0f;
+    private long score = 0;
+    private ShapeRenderer shapeRenderer;
+    private Snake snake;
+    private Food food;
+    private BitmapFont font;
+    private FreeTypeFontGenerator generator;
 
     public PlayState(GameStateManager gsm)
     {
@@ -35,8 +35,6 @@ public class PlayState extends State
         shapeRenderer = new ShapeRenderer();
         snake = new Snake();
         food = new Food();
-
-
         generator = new FreeTypeFontGenerator(Gdx.files.internal("Minecraft.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 20;
@@ -73,6 +71,10 @@ public class PlayState extends State
                 food = new Food();
             }
             snake.moveSnake();
+            if (snake.isCrashed()) {
+                gsm.set(new GameOverState(gsm, score));
+                this.dispose();
+            }
             timePassed = 0;
         }
     }
@@ -92,5 +94,6 @@ public class PlayState extends State
     {
         shapeRenderer.dispose();
         generator.dispose(); // don't forget to dispose to avoid memory leaks!
+        font.dispose();
     }
 }

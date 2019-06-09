@@ -14,6 +14,7 @@ public class Snake
     private Direction direction;
     private Array<Vector2> positions;
     private Vector2 nextLinkPos;
+    private boolean crashed = false;
 
     public Snake()
     {
@@ -42,7 +43,8 @@ public class Snake
     {
         // Gets the position of the head of the snake, then moves it.
         Vector2 lastPos = positions.get(0).cpy();
-        positions.set(0, getNewHeadPosition(lastPos));
+        Vector2 newPos = getNewHeadPosition(lastPos);
+        positions.set(0, newPos);
 
         /* For each snake segmment, copy the current location, move the
         *  segment to the previous position of the previous segment, then
@@ -57,6 +59,15 @@ public class Snake
             positions.add(new Vector2(nextLinkPos));
             nextLinkPos = null;
         }
+
+        if (lastPos.epsilonEquals(newPos)) {
+            crashed = true;
+        }
+    }
+
+    public boolean isCrashed()
+    {
+        return crashed;
     }
 
     public Vector2 getNewHeadPosition(Vector2 position)
