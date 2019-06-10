@@ -3,12 +3,9 @@ package com.zgillis.snake.state;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.zgillis.snake.SnakeGame;
-import com.zgillis.snake.fonts.FontManager;
 import com.zgillis.snake.sprite.Food;
 import com.zgillis.snake.sprite.Snake;
 
@@ -28,7 +25,6 @@ public class PlayState extends State
     private ShapeRenderer shapeRenderer;
     private Snake snake;
     private Food food;
-    private BitmapFont font;
     private Sound music;
     private boolean loaded = false;
 
@@ -43,7 +39,6 @@ public class PlayState extends State
 
     public void load()
     {
-        font = FontManager.createFont(FontManager.Font.MINECRAFT_BOLD, 19, new Color(1, 0.5f, 0, 1));
         music = Gdx.audio.newSound(Gdx.files.internal("8bit.mp3"));
         music.play();
         loaded = true;
@@ -91,7 +86,6 @@ public class PlayState extends State
     public void render(SpriteBatch sb)
     {
         sb.begin();
-        font.draw(sb, "SCORE: " + score, 2.5f, 595);
         sb.end();
         food.drawFood(shapeRenderer);
         snake.drawSnake(shapeRenderer);
@@ -102,7 +96,6 @@ public class PlayState extends State
     {
         music.dispose();
         shapeRenderer.dispose();
-        font.dispose();
     }
 
     public boolean isLoaded() {
